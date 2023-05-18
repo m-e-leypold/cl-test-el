@@ -1,0 +1,31 @@
+#!/bin/sh
+set -eu
+
+cleanup(){
+    if test -n "$FIFO"; then
+	rm -f "$FIFO"
+    fi
+    if test -n "$FIFODIR"; then
+	rmdir "$FIFODIR"
+    fi
+}
+
+trap cleanup EXIT
+
+
+FIFODIR="$(mktemp -d)"
+FIFO="$FIFODIR/logterm.fifo"
+mkfifo "$FIFO"
+
+echo -e "Logterm \e[0;37m($FIFO)\e[0;30m"
+echo
+
+LOOP=false
+
+if ! "$LOOP"; then
+    cat <$FIFO
+else
+    while test -a "$FIFO"; do
+	cat <$FIFO
+    done	  
+fi

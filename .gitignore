@@ -1,0 +1,7 @@
+*~
+*.elc
+/*-pkg.[0-9]*
+/.VERSION*
+/.build
+/*-pkg.el
+
