@@ -11,7 +11,7 @@ How to run the demo
 
       make install
 	
-  This will install the packe into your emacs. It can be removed later
+  This will install the package into your emacs. It can be removed later
   by ```M-x package-delete```.
 
 - Start emacs in the source directory.
