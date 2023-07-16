@@ -18,7 +18,6 @@ FIFO="$FIFODIR/logterm.fifo"
 mkfifo "$FIFO"
 
 echo -e "Logterm \e[0;37m($FIFO)\e[0;30m"
-echo
 
 LOOP=false
 

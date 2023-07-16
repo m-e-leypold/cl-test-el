@@ -69,7 +69,8 @@
    the common lisp side."
   
   (swank-call/funcall
-   'de.m-e-leypold.cl-test:get-test-tags cl-test-selected-suites))
+   'de.m-e-leypold.cl-test/emacs-api:get-test-tags
+   cl-test-selected-suites))
 
 (defvar cl-test-available-tags '()
   "The available test groups (their names).
@@ -105,10 +106,22 @@
 	(setf cl-test-recent-tags
 	      (cl-test-query-tags tags cl-test-recent-tags)))    
     )
-  (cl-multiple-value-bind (fifo buffer)
+
+  ;; TODO: Ideally the two log windows would be created side by side.
+  
+  (cl-multiple-value-bind (log-fifo buffer)
       (logterm-create)
-    (swank-call/funcall-async
-     'de.m-e-leypold.cl-test:run-tests fifo cl-test-recent-tags)))
+
+    (delete-other-windows)
+    (split-window-horizontally)
+    
+    (cl-multiple-value-bind (status-fifo buffer)
+	(logterm-create)
+      (swank-call/funcall-async
+       'de.m-e-leypold.cl-test/emacs-api:run
+       :status-output status-fifo
+       :log-output log-fifo
+       :select-tags cl-test-recent-tags))))
 
 ;;; * Interactive demos and tests ---------------------------------------------|
 
@@ -145,11 +158,11 @@
 
   "Simulate a test run."
 
+  (interactive "P")  
   (message "--- cl-test demo starting ---")
   
   (cl-test-prepare-demo)
   
-  (interactive "P")
   (cl-test-run choose-tags-p)
 
   (message "--- cl-test demo done ---"))

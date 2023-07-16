@@ -57,14 +57,17 @@
 ;;; * Keywords -----------------------------------------------------------------
 
 (defun cl-test-strings-from-keywords (keywords)
-  (mapcar #'(lambda (s)
-	      (downcase (substring (symbol-name s) 1)))
-	  keywords))
+  (cons "ALL"
+	(mapcar #'(lambda (s)		    
+		    (downcase (substring (symbol-name s) 1)))
+		keywords)))
 
 (defun cl-test-keywords-from-strings (names)
   (mapcar #'(lambda (s)
-	      (intern
-	       (concat ":" s)))
+	      (if (string-equal s "ALL")
+		  'T
+		(intern
+		 (concat ":" s))))
 	  names))
 
 
